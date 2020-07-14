@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { Comic } from '../models/comicModel';
 import { getComics } from '../functions/apiFunctions';
 import { ListItem } from '../components/ListItem';

@@ -1,6 +1,6 @@
 import { Comic } from '../models/comicModel';
 
-export function getComics( setComics: Function, comics: Comic[]  ){
+export const getComics = ( setComics: Function, comics: Comic[]  ) => {
 
     let current: number;
     const comicArray:Comic[] = [];
