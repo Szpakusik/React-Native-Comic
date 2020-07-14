@@ -16,6 +16,7 @@ export function HomeScreen({ navigation }) {
         screenWidth = Dimensions.get('screen').width;
         let current: number;
 
+            setComics([]);
             fetch('https://xkcd.com/info.0.json')
                 .then(( res ) => res.json())
                 .then(( data ) => {
@@ -51,7 +52,6 @@ export function HomeScreen({ navigation }) {
                     <TouchableOpacity  onPress={ () => navigation.navigate('Details', item) } >
                         <Text style = {styles.title}>{item.title}</Text>
                         <Image source = { {uri:item.img} } style = {{
-                            // flex: 1,
                             width: screenWidth,
                             height: 200,
                             resizeMode: 'contain'
