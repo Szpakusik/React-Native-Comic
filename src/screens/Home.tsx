@@ -5,41 +5,44 @@ import { Comic } from '../models/comicModel';
 
 export function HomeScreen({ navigation }) {
 
-    const comicArray: Comic[] = []
-    const [ comics, setComics ] = React.useState(comicArray)
+    const [ comics, setComics ] = React.useState< Comic[] >([])
+    const [ isLoading, setIsLoading ] = React.useState(true)
+
+    const comicArray: Comic[] = [];
     let screenWidth: number;
 
     React.useEffect(() => {
-
+        
         screenWidth = Dimensions.get('screen').width;
         let current: number;
 
-        fetch('https://xkcd.com/info.0.json')
-            .then(( res ) => res.json())
-            .then(( data ) => {
-                current = data.num;
-            })
+            fetch('https://xkcd.com/info.0.json')
+                .then(( res ) => res.json())
+                .then(( data ) => {
+                    current = data.num;
+                })
+                .then( async () => {
+                    for (let index = 0; index < 8; index++) {
+                        await fetch(`http://xkcd.com/${current.toString()}/info.0.json`)
+                        .then(( res ) => res.json())
+                        .then(( data ) => {
 
-            .then( async () => {
-                for (let index = 0; index < 8; index++) {
-                    await fetch(`http://xkcd.com/${current.toString()}/info.0.json`)
-                    .then(( res ) => res.json())
-                    .then(( data ) => {
-                        comicArray.push({
-                            id: data.num, 
-                            title: data.title,
-                            img: data.img
-                        })
-                        current -= 1;
-                    });
-                }
-                setComics(comicArray)
-            })
+                            setComics(comics => [...comics, {
+                                id: data.num, 
+                                title: data.title,
+                                img: data.img
+                            }])
+
+                            current -= 1;
+                        });
+                    }
+                })
+
     }, [])
     
     return (
+        
         <View style={ styles.container }>
-
             <FlatList 
                 numColumns = {1}
                 keyExtractor={(item:Comic, index) => item.id.toLocaleString()}
@@ -72,7 +75,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10
     }
-
 
 })
 
