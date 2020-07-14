@@ -1,48 +1,20 @@
 
 import * as React from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import { Comic } from '../models/comicModel';
+import { getComics } from '../functions/apiFunctions';
 
-export function HomeScreen({ navigation }) {
+export function HomeScreen({ navigation }: { navigation: any } ) {
 
     const [ comics, setComics ] = React.useState< Comic[] >([])
-    const [ isLoading, setIsLoading ] = React.useState(true)
-
-    const comicArray: Comic[] = [];
     let screenWidth: number;
 
     React.useEffect(() => {
-        
         screenWidth = Dimensions.get('screen').width;
-        let current: number;
-
-            setComics([]);
-            fetch('https://xkcd.com/info.0.json')
-                .then(( res ) => res.json())
-                .then(( data ) => {
-                    current = data.num;
-                })
-                .then( async () => {
-                    for (let index = 0; index < 8; index++) {
-                        await fetch(`http://xkcd.com/${current.toString()}/info.0.json`)
-                        .then(( res ) => res.json())
-                        .then(( data ) => {
-
-                            setComics(comics => [...comics, {
-                                id: data.num, 
-                                title: data.title,
-                                img: data.img
-                            }])
-
-                            current -= 1;
-                        });
-                    }
-                })
-
+        getComics( setComics, comics )
     }, [])
     
     return (
-        
         <View style={ styles.container }>
             <FlatList 
                 numColumns = {1}
@@ -75,6 +47,5 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10
     }
-
 })
 
